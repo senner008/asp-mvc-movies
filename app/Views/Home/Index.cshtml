@@ -1,0 +1,14 @@
+﻿@model Person
+
+@{
+    ViewData["Title"] = "Home Page";
+    var data = ViewBag.Message;
+    var data2 = (Person)ViewData["Message"];
+
+}
+
+<p> </p>
+
+<p>Getting Person Name property using ViewBag:  @data.Name</p>
+<p>Getting Person Name property using ViewData:  @data2.Name</p>
+<p>Getting Person Name property using model:  @Model.Name</p>

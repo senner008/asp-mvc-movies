@@ -1,0 +1,21 @@
+{
+  "addons": [
+
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/jincod/dotnetcore-buildpack#v3.0.100"
+    }
+  ],
+  "env": {
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "name": "asp-mvc-movies",
+  "scripts": {
+  },
+  "stack": "heroku-18"
+}
