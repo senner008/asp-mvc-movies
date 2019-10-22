@@ -15,13 +15,13 @@ namespace tests
         public HttpClient _client;
         public IntegrationTest()
         {
-                  string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+            string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
             // TODO :  better way to get TodoApp path?
             var parent = Directory.GetParent(wanted_path).Parent;
 
              IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(parent.ToString())
-            .AddJsonFile("app\\appsettings.json")
+            .AddJsonFile("app/appsettings.json")
             .Build();
        
             var server = new TestServer(new WebHostBuilder().UseConfiguration(configuration).UseStartup<Startup>());
