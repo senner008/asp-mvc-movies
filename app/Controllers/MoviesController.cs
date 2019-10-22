@@ -12,7 +12,6 @@ using MvcMovie.Models;
 
 namespace asp_mvc.Controllers
 {
-    [Authorize]
     public class MoviesController : Controller
     {
         private readonly MvcMovieContext _context;
@@ -57,7 +56,7 @@ namespace asp_mvc.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AuthorizeOrRedirect("/Identity/Account/AccessDenied", "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Price")] Movie movie)
         {
             if (ModelState.IsValid)
@@ -106,7 +105,7 @@ namespace asp_mvc.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AuthorizeOrRedirect("/Identity/Account/AccessDenied", "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditName(int id, [Bind("Id, Title")] Movie movie)
         {
             if (id != movie.Id)
@@ -144,7 +143,7 @@ namespace asp_mvc.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AuthorizeOrRedirect("/Identity/Account/AccessDenied", "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Price")] Movie movie)
         {
             if (id != movie.Id)
@@ -196,7 +195,7 @@ namespace asp_mvc.Controllers
         // POST: Movies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [AuthorizeOrRedirect("/Identity/Account/AccessDenied", "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var movie = await _context.Movie.FindAsync(id);
