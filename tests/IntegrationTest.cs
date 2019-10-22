@@ -20,8 +20,8 @@ namespace tests
             var parent = Directory.GetParent(wanted_path).Parent;
 
              IConfigurationRoot configuration = new ConfigurationBuilder()
-            .SetBasePath(parent.ToString())
-            .AddJsonFile("app/appsettings.json")
+            // .SetBasePath(parent.ToString())
+            // .AddJsonFile("app/appsettings.json")
             .Build();
        
             var server = new TestServer(new WebHostBuilder().UseConfiguration(configuration).UseStartup<Startup>());
