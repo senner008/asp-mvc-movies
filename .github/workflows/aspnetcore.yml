@@ -13,10 +13,12 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.0.100'
-    # - name: Build with dotnet
-    #   run: dotnet build --configuration Release
+    - name: Build with dotnet
+      run: dotnet build --configuration Release
+      env : 
+        DB : ${{ secrets.DB }}
     - name: Run xUnit tests
-      run: dotnet test
+      run: dotnet test --no-build
       env : 
         DB : ${{ secrets.DB }}
         BLA : "dasdsadd"
