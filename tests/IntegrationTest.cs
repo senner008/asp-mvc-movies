@@ -69,7 +69,6 @@ namespace tests
             response.EnsureSuccessStatusCode();
 
             var headers = response.Content.Headers.ContentType.ToString();
-
             Assert.Equal("text/html; charset=utf-8", headers);
         }
     }
