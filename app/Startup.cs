@@ -27,7 +27,7 @@ namespace asp_mvc {
 
             System.Console.WriteLine("----------------------------------------------------------");
             System.Console.WriteLine(Environment.GetEnvironmentVariable ("BLA"));
-             System.Console.WriteLine(Environment.GetEnvironmentVariable ("secrets.DB"));
+             System.Console.WriteLine(Environment.GetEnvironmentVariable ("CN_STRING"));
 
             services.AddDbContext<ApplicationDbContext> (options =>
                 options.UseMySql (isProduction ? Environment.GetEnvironmentVariable ("DB") : Configuration.GetConnectionString ("MvcMovieContextMYSQL")));
