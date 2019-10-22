@@ -2,10 +2,14 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using asp_identity.Data;
 using asp_mvc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using MvcMovie.Data;
 using Xunit;
 
 namespace tests
@@ -20,18 +24,25 @@ namespace tests
             var parent = Directory.GetParent(wanted_path).Parent;
             string env = Environment.GetEnvironmentVariable("DB");
             IConfigurationRoot configuration;
+            TestServer server;
             if (!String.IsNullOrEmpty(env)) {
-                    configuration = new ConfigurationBuilder()
-                    .Build();
+                  
+                server = new TestServer(new WebHostBuilder().ConfigureServices(services => {
+                    services.AddDbContext<MvcMovieContext>(options => options.UseMySql(Environment.GetEnvironmentVariable("DB")));
+                    services.AddDbContext<ApplicationDbContext> (options =>
+                    options.UseMySql(Environment.GetEnvironmentVariable("DB")));
+                }).UseStartup<Startup>());
+
             } else {
                  configuration = new ConfigurationBuilder()
                     .SetBasePath(parent.ToString())
                     .AddJsonFile("app/appsettings.json")
                     .Build();
+
+                server = new TestServer(new WebHostBuilder().UseConfiguration(configuration).UseStartup<Startup>());
+
             }
 
-       
-            var server = new TestServer(new WebHostBuilder().UseConfiguration(configuration).UseStartup<Startup>());
             _client = server.CreateClient();
         }
 
@@ -56,15 +67,15 @@ namespace tests
             Assert.Equal("text/html; charset=utf-8", headers);
         }
 
-        // [Fact]
-        // public async Task Movies_NoCondition_Success()        {
+        [Fact]
+        public async Task Movies_NoCondition_Success()        {
             
-        //     var response = await _client.GetAsync("Movies");
-        //     response.EnsureSuccessStatusCode();
+            var response = await _client.GetAsync("Movies");
+            response.EnsureSuccessStatusCode();
 
-        //     var headers = response.Content.Headers.ContentType.ToString();
+            var headers = response.Content.Headers.ContentType.ToString();
 
-        //     Assert.Equal("text/html; charset=utf-8", headers);
-        // }
+            Assert.Equal("text/html; charset=utf-8", headers);
+        }
     }
 }

@@ -12,7 +12,7 @@ using MvcMovie.Models;
 
 namespace asp_mvc.Controllers
 {
-    [Authorize]
+    // [Authorize]
     public class MoviesController : Controller
     {
         private readonly MvcMovieContext _context;
