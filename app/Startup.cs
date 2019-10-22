@@ -26,7 +26,7 @@ namespace asp_mvc {
             Boolean isProduction = Environment.GetEnvironmentVariable ("ASPNETCORE_ENVIRONMENT") == "Production";
 
             System.Console.WriteLine("----------------------------------------------------------");
-            System.Console.WriteLine(Environment.GetEnvironmentVariable ("DB"));
+            System.Console.WriteLine(Environment.GetEnvironmentVariable ("BLA"));
              System.Console.WriteLine(Environment.GetEnvironmentVariable ("secrets.DB"));
 
             services.AddDbContext<ApplicationDbContext> (options =>
