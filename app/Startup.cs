@@ -26,7 +26,7 @@ namespace asp_mvc {
             Boolean isProduction = Environment.GetEnvironmentVariable ("ASPNETCORE_ENVIRONMENT") == "Production";
 
             System.Console.WriteLine("----------------------------------------------------------");
-            System.Console.WriteLine(Environment.GetEnvironmentVariable ("ASPNETCORE_ENVIRONMENT"));
+            System.Console.WriteLine(Environment.GetEnvironmentVariable ("GITHUB_REPOSITORY"));
 
             services.AddDbContext<ApplicationDbContext> (options =>
                 options.UseMySql (isProduction ? Environment.GetEnvironmentVariable ("DB") : Configuration.GetConnectionString ("MvcMovieContextMYSQL")));
