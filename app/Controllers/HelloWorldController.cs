@@ -23,16 +23,7 @@ namespace asp_mvc.Controllers
         [HttpGet]
         public IActionResult ActionMethod()
         {
-            return Ok("Default");
+            return Ok("Hello World");
         }
-
-        [HttpGet]
-        [Route("getname")]
-        public IActionResult ActionMethodQuery([FromQuery] string name)
-        {
-            var n = "<a href='javascript:alert('Something Evil!')'>Mr. Hacker</a>";
-            return Ok(n);
-        }
-
     }
 }
