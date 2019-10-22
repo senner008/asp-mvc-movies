@@ -25,6 +25,9 @@ namespace asp_mvc {
         public void ConfigureServices (IServiceCollection services) {
             Boolean isProduction = Environment.GetEnvironmentVariable ("ASPNETCORE_ENVIRONMENT") == "Production";
 
+            System.Console.WriteLine("----------------------------------------------------------");
+            System.Console.WriteLine(Environment.GetEnvironmentVariable ("ASPNETCORE_ENVIRONMENT"));
+
             services.AddDbContext<ApplicationDbContext> (options =>
                 options.UseMySql (isProduction ? Environment.GetEnvironmentVariable ("DB") : Configuration.GetConnectionString ("MvcMovieContextMYSQL")));
             services.AddDefaultIdentity<IdentityUser> (options => options.SignIn.RequireConfirmedAccount = true)

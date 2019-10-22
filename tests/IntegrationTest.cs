@@ -16,7 +16,7 @@ namespace tests
         public IntegrationTest()
         {
             string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-            // TODO :  better way to get TodoApp path?
+            // TODO :  better way to get app path?
             var parent = Directory.GetParent(wanted_path).Parent;
 
              IConfigurationRoot configuration = new ConfigurationBuilder()
