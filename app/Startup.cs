@@ -27,8 +27,10 @@ namespace asp_mvc
         {
             services.AddControllersWithViews();
 
+            // services.AddDbContext<MvcMovieContext>(options =>
+            // options.UseSqlite(Configuration.GetConnectionString("MvcMovieContext")));
             services.AddDbContext<MvcMovieContext>(options =>
-            options.UseSqlite(Configuration.GetConnectionString("MvcMovieContext")));
+            options.UseMySql(Configuration.GetConnectionString("MvcMovieContextMYSQL")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
