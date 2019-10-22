@@ -23,7 +23,7 @@ namespace asp_mvc.Controllers
         [HttpGet]
         public IActionResult ActionMethod()
         {
-            return Ok("Default");
+            return Ok("Hello World");
         }
 
         [HttpGet]
