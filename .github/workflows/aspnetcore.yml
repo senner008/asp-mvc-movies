@@ -20,5 +20,5 @@ jobs:
       env : 
         DB : ${{ secrets.DB }}
         BLA : "dasdsadd"
-        CN_STRING : $
+        CN_STRING : ${{ secrets.CN_STRING }}
 
