@@ -16,7 +16,7 @@ jobs:
     # - name: Build with dotnet
     #   run: dotnet build --configuration Release
     - name: Run xUnit tests
-      run: dotnet test
+      run: dotnet test --no-restore
       env : 
         DB : ${{ secrets.DB }}
         BLA : "dasdsadd"

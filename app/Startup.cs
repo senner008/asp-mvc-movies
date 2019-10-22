@@ -26,8 +26,7 @@ namespace asp_mvc {
             Boolean isProduction = Environment.GetEnvironmentVariable ("ASPNETCORE_ENVIRONMENT") == "Production";
 
             System.Console.WriteLine("----------------------------------------------------------");
-            System.Console.WriteLine(Environment.GetEnvironmentVariable ("BLA"));
-             System.Console.WriteLine(Environment.GetEnvironmentVariable ("CN_STRING"));
+            System.Console.WriteLine(Environment.GetEnvironmentVariable ("CN_STRING"));
 
             services.AddDbContext<ApplicationDbContext> (options =>
                 options.UseMySql (isProduction ? Environment.GetEnvironmentVariable ("DB") : Configuration.GetConnectionString ("MvcMovieContextMYSQL")));
