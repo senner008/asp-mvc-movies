@@ -16,9 +16,9 @@ jobs:
     # - name: Build with dotnet
     #   run: dotnet build --configuration Release
     - name: Run xUnit tests
-      run: dotnet test --no-restore
+      run: dotnet test --no-build
       env : 
-        DB2 : ${{ secrets.DB }}
+        DB : ${{ secrets.DB }}
         BLA : "dasdsadd"
-        CN_STRING2 : ${{ secrets.CN_STRING }}
+        CN_STRING : ${{ secrets.CN_STRING }}
 
