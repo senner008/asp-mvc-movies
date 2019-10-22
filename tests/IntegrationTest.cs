@@ -24,26 +24,21 @@ namespace tests
             var parent = Directory.GetParent(wanted_path).Parent;
             string env = Environment.GetEnvironmentVariable("DB");
             IConfigurationRoot configuration;
-            TestServer server;
-            if (!String.IsNullOrEmpty(env)) {
-                  
-                server = new TestServer(new WebHostBuilder().ConfigureServices(services => {
-                    services.AddDbContext<MvcMovieContext>(options => options.UseMySql(Environment.GetEnvironmentVariable("DB")));
-                    services.AddDbContext<ApplicationDbContext> (options =>
-                    options.UseMySql(Environment.GetEnvironmentVariable("DB")));
-                }).UseStartup<Startup>());
 
+            var webhost = new WebHostBuilder();
+            if (!String.IsNullOrEmpty(env)) {       
+                webhost.ConfigureServices(services => {
+                    services.AddDbContext<MvcMovieContext>(options => options.UseMySql(Environment.GetEnvironmentVariable("DB")));
+                    services.AddDbContext<ApplicationDbContext> (options => options.UseMySql(Environment.GetEnvironmentVariable("DB")));
+                });
             } else {
                  configuration = new ConfigurationBuilder()
                     .SetBasePath(parent.ToString())
                     .AddJsonFile("app/appsettings.json")
                     .Build();
-
-                server = new TestServer(new WebHostBuilder().UseConfiguration(configuration).UseStartup<Startup>());
-
+                 webhost.UseConfiguration(configuration);
             }
-
-            _client = server.CreateClient();
+            _client = new TestServer(webhost.UseStartup<Startup>()).CreateClient();
         }
 
         [Fact]
