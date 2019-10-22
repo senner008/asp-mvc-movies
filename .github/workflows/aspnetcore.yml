@@ -17,3 +17,6 @@ jobs:
       run: dotnet build --configuration Release
     - name: Run xUnit tests
       run: dotnet test
+      env : 
+        DB : ${{ secrets.DB }}
+

@@ -2,10 +2,14 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using asp_identity.Data;
 using asp_mvc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using MvcMovie.Data;
 using Xunit;
 
 namespace tests
@@ -16,16 +20,25 @@ namespace tests
         public IntegrationTest()
         {
             string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-            // TODO :  better way to get TodoApp path?
+            // TODO :  better way to get app path?
             var parent = Directory.GetParent(wanted_path).Parent;
+            string env = Environment.GetEnvironmentVariable("DB");
+            IConfigurationRoot configuration;
 
-             IConfigurationRoot configuration = new ConfigurationBuilder()
-            .SetBasePath(parent.ToString())
-            .AddJsonFile("app/appsettings.json")
-            .Build();
-       
-            var server = new TestServer(new WebHostBuilder().UseConfiguration(configuration).UseStartup<Startup>());
-            _client = server.CreateClient();
+            var webhost = new WebHostBuilder();
+            if (!String.IsNullOrEmpty(env)) {       
+                webhost.ConfigureServices(services => {
+                    services.AddDbContext<MvcMovieContext>(options => options.UseMySql(Environment.GetEnvironmentVariable("DB")));
+                    services.AddDbContext<ApplicationDbContext> (options => options.UseMySql(Environment.GetEnvironmentVariable("DB")));
+                });
+            } else {
+                 configuration = new ConfigurationBuilder()
+                    .SetBasePath(parent.ToString())
+                    .AddJsonFile("app/appsettings.json")
+                    .Build();
+                 webhost.UseConfiguration(configuration);
+            }
+            _client = new TestServer(webhost.UseStartup<Startup>()).CreateClient();
         }
 
         [Fact]
