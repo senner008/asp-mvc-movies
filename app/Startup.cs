@@ -27,16 +27,15 @@ namespace asp_mvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-     
+            Boolean isProduction = Environment.GetEnvironmentVariable ("ASPNETCORE_ENVIRONMENT") == "Production";
 
              services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseMySql(
-                    Configuration.GetConnectionString("MvcMovieContextMYSQL")));
+                options.UseMySql(isProduction ? Environment.GetEnvironmentVariable ("JAWSDB_URL") : Configuration.GetConnectionString("MvcMovieContextMYSQL")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddDbContext<MvcMovieContext>(options =>
-            options.UseMySql(Configuration.GetConnectionString("MvcMovieContextMYSQL")));
+                options.UseMySql(isProduction ? Environment.GetEnvironmentVariable ("JAWSDB_URL") : Configuration.GetConnectionString("MvcMovieContextMYSQL")));
 
               services.AddControllersWithViews();
            services.AddRazorPages();
