@@ -18,7 +18,7 @@ jobs:
     - name: Run xUnit tests
       run: dotnet test --no-restore
       env : 
-        DB : ${{ secrets.DB }}
+        DB2 : ${{ secrets.DB }}
         BLA : "dasdsadd"
-        CN_STRING : ${{ secrets.CN_STRING }}
+        CN_STRING2 : ${{ secrets.CN_STRING }}
 
