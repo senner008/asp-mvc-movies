@@ -8,6 +8,15 @@
     }
   ],
   "env": {
+    "ASPNETCORE_ENVIRONMENT": {
+      "required": true
+    },
+    "DB": {
+      "required": true
+    },
+    "JAWSDB_URL" : {
+      "required": true
+    }
   },
   "formation": {
     "web": {
