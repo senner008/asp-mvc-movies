@@ -27,21 +27,19 @@ namespace TestNet2oAuthBlogy.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-
-            bool x = await _rolemanager.RoleExistsAsync("Admin");
-            if (!x) {
+            bool adminExists = await _rolemanager.RoleExistsAsync("Admin");
+            if (!adminExists) {
                 var role = new IdentityRole();
                 role.Name = "Admin";
                 await _rolemanager.CreateAsync(role);
+                var currentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var roleresult = await _usermanager.AddToRoleAsync(currentUser, "Admin");
+                _appcontext.SaveChanges();
+                return Ok("User set as Admin");
             }
             else {
-               return BadRequest("Admin already exists!"); 
+                return BadRequest("Admin already exists!"); 
             }
-            var currentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
-            var roleresult = await _usermanager.AddToRoleAsync(currentUser, "Admin");
-            _appcontext.SaveChanges();
-            return Ok("User set as Admin");
         }
-
     }
 }
