@@ -39,8 +39,14 @@ namespace asp_mvc {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure (IApplicationBuilder app, IWebHostEnvironment env) {
+        public void Configure (IApplicationBuilder app, IWebHostEnvironment env,  UserManager<IdentityUser> userManager) {
+            
             if (env.IsDevelopment ()) {
+
+                var password = Configuration.GetSection("Passwords").GetSection("adminpass").Value;
+                System.Console.WriteLine(password);
+                ApplicationDbInitializer.SeedUsers(userManager, password);
+              
                 app.UseDeveloperExceptionPage ();
                 app.UseDatabaseErrorPage ();
             } else {
