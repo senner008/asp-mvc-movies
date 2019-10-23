@@ -1,28 +1,27 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using MvcMovie.Data;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using MvcMovie.Models;
 
-namespace MvcMovie.Models
+namespace MvcMovie.Data
 {
-    public static class SeedData
+    public class MvcMovieContext : DbContext
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public MvcMovieContext (DbContextOptions<MvcMovieContext> options)
+            : base(options)
         {
-            using (var context = new MvcMovieContext(
-                serviceProvider.GetRequiredService<
-                    DbContextOptions<MvcMovieContext>>()))
-            {
-                // Look for any movies.
-                if (context.Movie.Any())
-                {
-                    return;   // DB has been seeded
-                }
+        }
 
-                context.Movie.AddRange(
+        public DbSet<Movie> Movie { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+                List<Movie> Movies = new List<Movie>
+                {
                     new Movie
                     {
+                        Id = 1,
                         Title = "When Harry Met Sally",
                         ReleaseDate = DateTime.Parse("1989-2-12"),
                         Genre = "Romantic Comedy",
@@ -32,6 +31,7 @@ namespace MvcMovie.Models
 
                     new Movie
                     {
+                        Id = 2,
                         Title = "Ghostbusters ",
                         ReleaseDate = DateTime.Parse("1984-3-13"),
                         Genre = "Comedy",
@@ -40,6 +40,7 @@ namespace MvcMovie.Models
 
                     new Movie
                     {
+                        Id = 3,
                         Title = "Ghostbusters 2",
                         ReleaseDate = DateTime.Parse("1986-2-23"),
                         Genre = "Comedy",
@@ -48,14 +49,14 @@ namespace MvcMovie.Models
 
                     new Movie
                     {
+                        Id = 4,
                         Title = "Rio Bravo",
                         ReleaseDate = DateTime.Parse("1959-4-15"),
                         Genre = "Western",
                         Price = 3.99M
                     }
-                );
-                context.SaveChanges();
-            }
+                };
+                modelBuilder.Entity<Movie> ().HasData (Movies);
         }
     }
 }
