@@ -28,7 +28,7 @@ namespace tests
             var webhost = new WebHostBuilder();
             if (!String.IsNullOrEmpty(env)) {       
                 webhost.ConfigureServices(services => {
-                    services.AddDbContext<MvcMovieContext>(options => options.UseMySql(Environment.GetEnvironmentVariable("DB")));
+                    services.AddDbContext<MvcMovieContext>(options => options.UseMySql(Environment.GetEnvironmentVariable("UNOEURO_DB")));
                     services.AddDbContext<ApplicationDbContext> (options => options.UseMySql(Environment.GetEnvironmentVariable("DB")));
                 });
             } else {

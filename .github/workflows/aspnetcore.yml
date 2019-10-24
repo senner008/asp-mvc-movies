@@ -19,4 +19,5 @@ jobs:
       run: dotnet test
       env : 
         DB : ${{ secrets.DB }}
+        UNOEURO_DB : ${{ secrets.UNOEURO_DB }}
 

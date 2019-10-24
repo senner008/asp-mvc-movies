@@ -5,12 +5,12 @@ public static class ApplicationDbInitializer
 {
     public static void SeedUsers(UserManager<IdentityUser> userManager, string password)
     {
-        if (userManager.FindByEmailAsync("myfunny@email.com").Result == null)
+        if (userManager.FindByEmailAsync("admin@email.com").Result == null)
         {
             IdentityUser user = new IdentityUser
             {
-                UserName = "myfunny@email.com",
-                Email = "myfunny@email.com",
+                UserName = "admin@email.com",
+                Email = "admin@email.com",
                 EmailConfirmed = true
                 
             };
