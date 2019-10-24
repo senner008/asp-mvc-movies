@@ -30,7 +30,8 @@ namespace asp_mvc {
             services.AddDefaultIdentity<IdentityUser> (options => {
                 options.SignIn.RequireConfirmedAccount = true;
                 options.User.RequireUniqueEmail = true;
-
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 15;
             })
                 .AddRoles<IdentityRole> ()
                 .AddEntityFrameworkStores<ApplicationDbContext> ();
