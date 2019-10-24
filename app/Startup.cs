@@ -26,13 +26,17 @@ namespace asp_mvc {
             Boolean isProduction = Environment.GetEnvironmentVariable ("ASPNETCORE_ENVIRONMENT") == "Production";
 
             services.AddDbContext<ApplicationDbContext> (options =>
-                options.UseMySql (isProduction ? Environment.GetEnvironmentVariable ("DB") : Configuration.GetConnectionString ("MvcMovieContextMYSQL")));
-            services.AddDefaultIdentity<IdentityUser> (options => options.SignIn.RequireConfirmedAccount = true)
+                options.UseMySql (isProduction ? Environment.GetEnvironmentVariable ("DB") : Configuration.GetConnectionString ("HerokuJawsDB")));
+            services.AddDefaultIdentity<IdentityUser> (options => {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.User.RequireUniqueEmail = true;
+
+            })
                 .AddRoles<IdentityRole> ()
                 .AddEntityFrameworkStores<ApplicationDbContext> ();
 
             services.AddDbContext<MvcMovieContext> (options =>
-                options.UseMySql (isProduction ? Environment.GetEnvironmentVariable ("DB") : Configuration.GetConnectionString ("MvcMovieContextMYSQL")));
+                options.UseMySql (isProduction ? Environment.GetEnvironmentVariable ("UNOEURO_DB") : Configuration.GetConnectionString ("UnoEuroDb")));
 
             services.AddControllersWithViews ();
             services.AddRazorPages ();
@@ -42,11 +46,7 @@ namespace asp_mvc {
         public void Configure (IApplicationBuilder app, IWebHostEnvironment env,  UserManager<IdentityUser> userManager) {
             
             if (env.IsDevelopment ()) {
-
-                var password = Configuration.GetSection("Passwords").GetSection("adminpass").Value;
-                System.Console.WriteLine(password);
-                ApplicationDbInitializer.SeedUsers(userManager, password);
-              
+                ApplicationDbInitializer.SeedUsers(userManager, Configuration.GetSection("Passwords").GetSection("adminpass").Value);    
                 app.UseDeveloperExceptionPage ();
                 app.UseDatabaseErrorPage ();
             } else {
