@@ -1,22 +1,30 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using asp_identity.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.DataEncryption;
+using Microsoft.EntityFrameworkCore.DataEncryption.Providers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MvcMovie.Data;
+using MvcMovie.Models;
 
 namespace asp_mvc {
+
+   
     public class Startup {
         public Startup (IConfiguration configuration) {
-            Configuration = configuration;
+            Configuration = configuration;   
+            Keys._provider = GetKeys.Get(configuration);
         }
 
         public IConfiguration Configuration { get; }
