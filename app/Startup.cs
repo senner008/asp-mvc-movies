@@ -30,7 +30,7 @@ namespace asp_mvc {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices (IServiceCollection services) {
-            Boolean isProduction = String.IsNullOrEmpty(Environment.GetEnvironmentVariable ("DB"));
+            Boolean isProduction = !String.IsNullOrEmpty(Environment.GetEnvironmentVariable ("DB"));
 
             services.AddDbContext<ApplicationDbContext> (options =>
                 options.UseMySql (isProduction ? Environment.GetEnvironmentVariable ("DB") : Configuration.GetConnectionString ("HerokuJawsDB")));
