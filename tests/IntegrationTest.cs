@@ -17,8 +17,13 @@ namespace tests
 {
     public class MockGetKeys : IGetKeys
     {
-        public string Key1 { get; set; } = Environment.GetEnvironmentVariable("AES_KEY1");
-        public string Key2 { get; set; } = Environment.GetEnvironmentVariable("AES_KEY2");
+        public MockGetKeys(IConfiguration configuration)
+        {
+            Key1 = Environment.GetEnvironmentVariable("AES_KEY1");
+            Key2 = Environment.GetEnvironmentVariable("AES_KEY2");
+        }
+        public string Key1 { get; set; }
+        public string Key2 { get; set; } 
     }
     public class IntegrationTest
     {
