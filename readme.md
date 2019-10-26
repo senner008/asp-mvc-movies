@@ -21,6 +21,8 @@ appsettings.json
     },
     "Passwords" : {
       "adminpass" : "{{seeded-admin-user-pass}}"
+      "encryptionKey" : "{{key1}}",
+      "encryptionIV" : "{{key2}}"
     }
 }
 ```
