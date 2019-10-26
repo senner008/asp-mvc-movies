@@ -34,9 +34,15 @@ namespace tests
             // TODO :  better way to get app path?
             var parent = Directory.GetParent(wanted_path).Parent;
             string env = Environment.GetEnvironmentVariable("DB");
+
             var webhost = new WebHostBuilder();
-            
-            if (String.IsNullOrEmpty(env)) {       
+            if (!String.IsNullOrEmpty(env)) {       
+                webhost.ConfigureTestServices(services => {
+                    services.AddDbContext<MvcMovieContext>(options => options.UseMySql(Environment.GetEnvironmentVariable("UNOEURO_DB")));
+                    services.AddDbContext<ApplicationDbContext> (options => options.UseMySql(Environment.GetEnvironmentVariable("DB")));
+                    services.AddSingleton<IGetKeys, MockGetKeys>();
+                });
+            } else {
                  IConfigurationRoot configuration = new ConfigurationBuilder()
                     .SetBasePath(parent.ToString())
                     .AddJsonFile("app/appsettings.json")
