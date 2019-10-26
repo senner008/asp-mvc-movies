@@ -11,7 +11,6 @@ namespace MvcMovie.Models
 
         [Encrypted]
         public string Title {get; set;}
-        private string _title;
         
         [Display(Name = "Release Date")]
         [DataType(DataType.Date)]

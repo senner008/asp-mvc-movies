@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.DataEncryption;
+using Microsoft.EntityFrameworkCore.DataEncryption.Providers;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using MvcMovie.Data;
 using MvcMovie.Models;
 
@@ -14,16 +18,20 @@ namespace asp_mvc.Controllers
     public class MoviesController : Controller
     {
         private readonly MvcMovieContext _context;
+        private readonly ILogger<MoviesController> _logger;
 
-        public MoviesController(MvcMovieContext context)
+
+        public MoviesController(MvcMovieContext context, ILogger<MoviesController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Movies
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Movie.ToListAsync());
+            var list = (await _context.Movie.ToListAsync());
+            return View(list);
         }
 
         // GET: Movies/Details/5
@@ -31,14 +39,16 @@ namespace asp_mvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                _logger.LogError($"Id not provided!");
+                return View("Error", "Intet id valgt!!");
             }
 
-            var movie = await _context.Movie
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var movie = await _context.Movie.FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
-                return NotFound();
+                _logger.LogError($"The movie does not exist!");
+                Response.StatusCode = 404;
+                return View("Error", "Film med id findes ikke!");
             }
 
             return View(movie);
@@ -60,6 +70,7 @@ namespace asp_mvc.Controllers
         {
             if (ModelState.IsValid)
             {
+                // movie.Title = _provider.Encrypt(movie.Title);
                 _context.Add(movie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -178,14 +189,18 @@ namespace asp_mvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                 _logger.LogError($"Please provide id for the movie to delete");
+                Response.StatusCode = 404;
+                return View("Error", "Film med id ikke angivet!");
             }
 
             var movie = await _context.Movie
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
-                return NotFound();
+                _logger.LogError($"The movie does not exist!");
+                Response.StatusCode = 404;
+                return View("Error", "Film med id findes ikke!");
             }
 
             return View(movie);
@@ -198,8 +213,24 @@ namespace asp_mvc.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var movie = await _context.Movie.FindAsync(id);
-            _context.Movie.Remove(movie);
-            await _context.SaveChangesAsync();
+            try 
+            {
+                _context.Movie.Remove(movie);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MovieExists(movie.Id))
+                {
+                    _logger.LogError($"The movie does not exist! Possibly deleted by another admin user");
+                    Response.StatusCode = 404;
+                    return View("Error", "Film med id findes ikke! Muligvis slettet af anden admin bruger");
+                }
+                else
+                {
+                    throw;
+                }
+            }
             return RedirectToAction(nameof(Index));
         }
 
@@ -207,5 +238,7 @@ namespace asp_mvc.Controllers
         {
             return _context.Movie.Any(e => e.Id == id);
         }
+
+
     }
 }

@@ -24,7 +24,6 @@ namespace asp_mvc {
     public class Startup {
         public Startup (IConfiguration configuration) {
             Configuration = configuration;   
-            Keys._provider = GetKeys.Get(configuration);
         }
 
         public IConfiguration Configuration { get; }
@@ -49,11 +48,15 @@ namespace asp_mvc {
 
             services.AddControllersWithViews ();
             services.AddRazorPages ();
+            services.AddSingleton<IGetKeys, GetKeys>();
+            services.AddSingleton<IKeys, Keys>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure (IApplicationBuilder app, IWebHostEnvironment env,  UserManager<IdentityUser> userManager) {
-            
+        public void Configure (IApplicationBuilder app, IWebHostEnvironment env,  UserManager<IdentityUser> userManager, IKeys keys) {
+
+             
             if (env.IsDevelopment ()) {
                 ApplicationDbInitializer.SeedUsers(userManager, Configuration.GetSection("Passwords").GetSection("adminpass").Value);    
                 app.UseDeveloperExceptionPage ();

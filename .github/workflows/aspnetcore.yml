@@ -20,4 +20,6 @@ jobs:
       env : 
         DB : ${{ secrets.DB }}
         UNOEURO_DB : ${{ secrets.UNOEURO_DB }}
+        AES_KEY1 : ${{ secrets.AES_KEY1 }}
+        AES_KEY2 : ${{ secrets.AES_KEY2 }}
 
