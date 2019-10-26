@@ -40,7 +40,7 @@ namespace tests
                 webhost.ConfigureServices(services => {
                     services.AddDbContext<MvcMovieContext>(options => options.UseMySql(Environment.GetEnvironmentVariable("UNOEURO_DB")));
                     services.AddDbContext<ApplicationDbContext> (options => options.UseMySql(Environment.GetEnvironmentVariable("DB")));
-                    services.AddSingleton<IGetKeys, MockGetKeys>();
+                    // services.AddSingleton<IGetKeys, MockGetKeys>();
                 });
             } else {
                  IConfigurationRoot configuration = new ConfigurationBuilder()
