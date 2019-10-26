@@ -19,7 +19,7 @@ namespace tests
     {
         public MockGetKeys(IConfiguration configuration)
         {
-            Key1 = Environment.GetEnvironmentVariable("AES_KEY1");
+            Key1 = Environment.GetEnvironmentVariable("AES_KEY2");
             Key2 = Environment.GetEnvironmentVariable("AES_KEY2");
         }
         public string Key1 { get; set; }
