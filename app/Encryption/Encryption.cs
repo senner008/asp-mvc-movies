@@ -67,9 +67,15 @@ namespace MvcMovie.Models
     {
         public GetKeys(IConfiguration configuration)
         {
-            var keys = configuration.GetSection("Passwords");
-            Key1 = keys.GetSection("encryptionKey").Value;
-            Key2 = keys.GetSection("encryptionIV").Value;
+            Boolean isProduction = Environment.GetEnvironmentVariable ("ASPNETCORE_ENVIRONMENT") == "Production";
+            if (isProduction) {
+                Key1 = Environment.GetEnvironmentVariable("AES_KEY1");
+                Key2 = Environment.GetEnvironmentVariable("AES_KEY2");
+            } else {
+                 var keys = configuration.GetSection("Passwords");
+                Key1 = keys.GetSection("encryptionKey").Value;
+                Key2 = keys.GetSection("encryptionIV").Value;
+            }
         }
         public string Key1 { get; set; }
         public string Key2 { get; set; }
