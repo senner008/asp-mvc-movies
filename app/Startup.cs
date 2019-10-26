@@ -48,7 +48,20 @@ namespace asp_mvc {
 
             services.AddControllersWithViews ();
             services.AddRazorPages ();
-            services.AddSingleton<IGetKeys, GetKeys>();
+
+            string key1;
+            string key2;
+
+            if (isProduction) {
+                key1 =  Environment.GetEnvironmentVariable("AES_KEY1");
+                key2 =  Environment.GetEnvironmentVariable("AES_KEY2");
+            }
+            else {
+                 var keys = Configuration.GetSection("Passwords");
+                 key1 = keys.GetSection("encryptionKey").Value;
+                 key2 = keys.GetSection("encryptionIV").Value;
+            }
+            services.AddSingleton<IGetKeys>(opt => new GetKeys(Configuration, key1, key2));
             services.AddSingleton<IKeys, Keys>();
 
         }
