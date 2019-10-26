@@ -27,7 +27,7 @@ namespace MvcMovie.Data
 
                 base.OnModelCreating(modelBuilder);
 
-                Expression<Func<string, string>> DecryptExpr = x => Keys.IsBase64String(x) ? Keys._provider.Decrypt(x) : x;
+                Expression<Func<string, string>> DecryptExpr = x => Keys._provider.Decrypt(x);
                 Expression<Func<string, string>> EncryptExpr = x => Keys._provider.Encrypt(x);
 
 
