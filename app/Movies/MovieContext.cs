@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.DataEncryption;
 using Microsoft.EntityFrameworkCore.DataEncryption.Providers;
@@ -15,16 +16,19 @@ namespace MvcMovie.Data
         public MvcMovieContext (DbContextOptions<MvcMovieContext> options, IKeys keys)
             : base(options)
         {
-         
+            Keys = keys;
         }
 
         public DbSet<Movie> Movie { get; set; }
+        public IKeys Keys { get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {   
-                // modelBuilder.UseEncryption(this._provider);
 
                 base.OnModelCreating(modelBuilder);
+
+                Expression<Func<string, string>> DecryptExpr = x => Keys.IsBase64String(x) ? Keys._provider.Decrypt(x) : x;
+                Expression<Func<string, string>> EncryptExpr = x => Keys._provider.Encrypt(x);
 
 
                 foreach (var entityType in modelBuilder.Model.GetEntityTypes())
@@ -34,7 +38,7 @@ namespace MvcMovie.Data
                         var attributes = property.PropertyInfo.GetCustomAttributes(typeof(EncryptedAttribute), false);
                         if (attributes.Any())
                         {
-                            property.SetValueConverter(new EncryptedConverter());
+                            property.SetValueConverter(new EncryptedConverter(EncryptExpr, DecryptExpr));
                         }
                     }
                 }

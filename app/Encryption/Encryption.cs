@@ -13,13 +13,17 @@ using Microsoft.Extensions.Configuration;
 
 namespace MvcMovie.Models
 {
-    public interface IKeys {}
+    public interface IKeys {
+
+         bool IsBase64String(string value);
+         IEncryptionProvider _provider { get; set; }
+    }
 
     public class Keys : IKeys
     {
-        public static IEncryptionProvider _provider { get; set; }
+        public IEncryptionProvider _provider { get; set; }
 
-        private static readonly HashSet<char> _base64Characters = new HashSet<char>() { 
+        private readonly HashSet<char> _base64Characters = new HashSet<char>() { 
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 
             'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 
             'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 
@@ -33,7 +37,7 @@ namespace MvcMovie.Models
              _provider =  new AesProvider(Convert.FromBase64String(getkeys.Key1), Convert.FromBase64String(getkeys.Key2));
         }
 
-        public static bool IsBase64String(string value)
+        public bool IsBase64String(string value)
         {
             if (string.IsNullOrEmpty(value))
             {
@@ -89,14 +93,12 @@ namespace MvcMovie.Models
 
     class EncryptedConverter : ValueConverter<string, string>
     {
-        public EncryptedConverter(ConverterMappingHints mappingHints = default)
+        public EncryptedConverter(Expression<Func<string, string>> EncryptExpr, Expression<Func<string, string>> DecryptExpr, ConverterMappingHints mappingHints = default)
             : base(EncryptExpr, DecryptExpr, mappingHints)
-        { 
-      
+        {
+     
         }
-
-        static Expression<Func<string, string>> DecryptExpr = x => Keys.IsBase64String(x) ? Keys._provider.Decrypt(x) : x;
-        static Expression<Func<string, string>> EncryptExpr = x => Keys._provider.Encrypt(x);
+        
     }
 
      
