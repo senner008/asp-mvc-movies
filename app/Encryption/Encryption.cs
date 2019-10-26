@@ -67,7 +67,7 @@ namespace MvcMovie.Models
     {
         public GetKeys(IConfiguration configuration)
         {
-            Boolean isProduction = Environment.GetEnvironmentVariable ("ASPNETCORE_ENVIRONMENT") == "Production";
+            Boolean isProduction = !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("AES_KEY1"));
             if (isProduction) {
                 Key1 = Environment.GetEnvironmentVariable("AES_KEY1");
                 Key2 = Environment.GetEnvironmentVariable("AES_KEY2");
