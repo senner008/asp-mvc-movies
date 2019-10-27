@@ -14,6 +14,7 @@ namespace MvcMovie.Data
         }
 
         public DbSet<Movie> Movie { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -56,7 +57,19 @@ namespace MvcMovie.Data
                         Price = 3.99M
                     }
                 };
+
+                 List<Review> Reviews = new List<Review>
+                {
+                    new Review
+                    {
+                        Id = 1,
+                        MovieID = 1,
+                        Article = "Really Good Movie!"
+                    }
+                };
+
                 modelBuilder.Entity<Movie> ().HasData (Movies);
+                modelBuilder.Entity<Review> ().HasData (Reviews);
         }
     }
 }
