@@ -36,4 +36,4 @@ appsettings.json
 - Identity/Fake user tests
 - SignalR - webapck -typscript (https://docs.microsoft.com/en-us/aspnet/core/tutorials/signalr-typescript-webpack?view=aspnetcore-3.0&tabs=visual-studio-code)
 - add clear field to input box
-- add sort
+- add remaining CRUD error handling

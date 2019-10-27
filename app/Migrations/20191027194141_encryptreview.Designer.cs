@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MvcMovie.Data;
 
 namespace asp_mvc.Migrations
 {
     [DbContext(typeof(MvcMovieContext))]
-    partial class MvcMovieContextModelSnapshot : ModelSnapshot
+    [Migration("20191027194141_encryptreview")]
+    partial class encryptreview
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,7 +109,7 @@ namespace asp_mvc.Migrations
 
             modelBuilder.Entity("MvcMovie.Models.Review", b =>
                 {
-                    b.HasOne("MvcMovie.Models.Movie", "Movie")
+                    b.HasOne("MvcMovie.Models.Movie", null)
                         .WithMany("Reviews")
                         .HasForeignKey("MovieID")
                         .OnDelete(DeleteBehavior.Cascade)
