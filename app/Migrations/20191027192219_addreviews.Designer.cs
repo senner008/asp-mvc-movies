@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MvcMovie.Data;
 
 namespace asp_mvc.Migrations
 {
     [DbContext(typeof(MvcMovieContext))]
-    partial class MvcMovieContextModelSnapshot : ModelSnapshot
+    [Migration("20191027192219_addreviews")]
+    partial class addreviews
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,7 +52,7 @@ namespace asp_mvc.Migrations
                             Price = 7.99m,
                             Rating = "R",
                             ReleaseDate = new DateTime(1989, 2, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "QmLIoDCR4+XdfbABuDKlxGnRf8rgJSxuFKlaxXV5p+c="
+                            Title = "When Harry Met Sally"
                         },
                         new
                         {
@@ -58,7 +60,7 @@ namespace asp_mvc.Migrations
                             Genre = "Comedy",
                             Price = 8.99m,
                             ReleaseDate = new DateTime(1984, 3, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "QqcNP7BNJ4p4G056h4ZXGw=="
+                            Title = "Ghostbusters "
                         },
                         new
                         {
@@ -66,7 +68,7 @@ namespace asp_mvc.Migrations
                             Genre = "Comedy",
                             Price = 9.99m,
                             ReleaseDate = new DateTime(1986, 2, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "8dCMc07jZ4lGIgsOTsCnRA=="
+                            Title = "Ghostbusters 2"
                         },
                         new
                         {
@@ -74,7 +76,7 @@ namespace asp_mvc.Migrations
                             Genre = "Western",
                             Price = 3.99m,
                             ReleaseDate = new DateTime(1959, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "TUfObcZkBTNczp+QeDa8Zw=="
+                            Title = "Rio Bravo"
                         });
                 });
 
@@ -100,14 +102,14 @@ namespace asp_mvc.Migrations
                         new
                         {
                             Id = 1,
-                            Article = "ZMhZSRV/DXqjBTa6ekvAAICpqePIZcD+JqpSuqCpVUI=",
+                            Article = "Really Good Movie!",
                             MovieID = 1
                         });
                 });
 
             modelBuilder.Entity("MvcMovie.Models.Review", b =>
                 {
-                    b.HasOne("MvcMovie.Models.Movie", "Movie")
+                    b.HasOne("MvcMovie.Models.Movie", null)
                         .WithMany("Reviews")
                         .HasForeignKey("MovieID")
                         .OnDelete(DeleteBehavior.Cascade)

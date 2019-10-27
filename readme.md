@@ -34,3 +34,4 @@ appsettings.json
 - Implement repository pattern
 - Controller tests
 - Identity/Fake user tests
+- add remaining CRUD error handling
