@@ -20,26 +20,25 @@ using MvcMovie.Models;
 
 namespace asp_mvc {
 
-   
     public class Startup {
         public Startup (IConfiguration configuration) {
-            Configuration = configuration;   
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices (IServiceCollection services) {
-            Boolean isProduction = !String.IsNullOrEmpty(Environment.GetEnvironmentVariable ("DB"));
+            Boolean isProduction = !String.IsNullOrEmpty (Environment.GetEnvironmentVariable ("DB"));
 
             services.AddDbContext<ApplicationDbContext> (options =>
                 options.UseMySql (isProduction ? Environment.GetEnvironmentVariable ("DB") : Configuration.GetConnectionString ("HerokuJawsDB")));
             services.AddDefaultIdentity<IdentityUser> (options => {
-                options.SignIn.RequireConfirmedAccount = true;
-                options.User.RequireUniqueEmail = true;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequiredLength = 15;
-            })
+                    options.SignIn.RequireConfirmedAccount = true;
+                    options.User.RequireUniqueEmail = true;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequiredLength = 15;
+                })
                 .AddRoles<IdentityRole> ()
                 .AddEntityFrameworkStores<ApplicationDbContext> ();
 
@@ -53,25 +52,29 @@ namespace asp_mvc {
             string key2;
 
             if (isProduction) {
-                key1 =  Environment.GetEnvironmentVariable("AES_KEY1");
-                key2 =  Environment.GetEnvironmentVariable("AES_KEY2");
+                key1 = Environment.GetEnvironmentVariable ("AES_KEY1");
+                key2 = Environment.GetEnvironmentVariable ("AES_KEY2");
+            } else {
+                var keys = Configuration.GetSection ("Passwords");
+                key1 = keys.GetSection ("encryptionKey").Value;
+                key2 = keys.GetSection ("encryptionIV").Value;
             }
-            else {
-                 var keys = Configuration.GetSection("Passwords");
-                 key1 = keys.GetSection("encryptionKey").Value;
-                 key2 = keys.GetSection("encryptionIV").Value;
-            }
-            services.AddSingleton<IGetKeys>(opt => new GetKeys(Configuration, key1, key2));
-            services.AddSingleton<IKeys, Keys>();
+            services.AddSingleton<IGetKeys> (opt => new GetKeys (Configuration, key1, key2));
+            services.AddSingleton<IKeys, Keys> ();
+
+            services.AddCors (o => o.AddPolicy ("MyPolicy", builder => {
+                builder.AllowAnyOrigin ()
+                    .AllowAnyMethod ()
+                    .AllowAnyHeader ();
+            }));
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure (IApplicationBuilder app, IWebHostEnvironment env,  UserManager<IdentityUser> userManager) {
+        public void Configure (IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager) {
 
-             
             if (env.IsDevelopment ()) {
-                ApplicationDbInitializer.SeedUsers(userManager, Configuration.GetSection("Passwords").GetSection("adminpass").Value);    
+                ApplicationDbInitializer.SeedUsers (userManager, Configuration.GetSection ("Passwords").GetSection ("adminpass").Value);
                 app.UseDeveloperExceptionPage ();
                 app.UseDatabaseErrorPage ();
             } else {
@@ -83,6 +86,7 @@ namespace asp_mvc {
             app.UseStaticFiles ();
 
             app.UseRouting ();
+            app.UseCors("MyPolicy");
 
             app.UseAuthentication ();
             app.UseAuthorization ();
