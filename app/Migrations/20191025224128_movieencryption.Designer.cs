@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MvcMovie.Data;
 
 namespace asp_mvc.Migrations
 {
     [DbContext(typeof(MvcMovieContext))]
-    partial class MvcMovieContextModelSnapshot : ModelSnapshot
+    [Migration("20191025224128_movieencryption")]
+    partial class movieencryption
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,42 +78,6 @@ namespace asp_mvc.Migrations
                             ReleaseDate = new DateTime(1959, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Title = "TUfObcZkBTNczp+QeDa8Zw=="
                         });
-                });
-
-            modelBuilder.Entity("MvcMovie.Models.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Article")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("MovieID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MovieID");
-
-                    b.ToTable("Reviews");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Article = "Really Good Movie!",
-                            MovieID = 1
-                        });
-                });
-
-            modelBuilder.Entity("MvcMovie.Models.Review", b =>
-                {
-                    b.HasOne("MvcMovie.Models.Movie", null)
-                        .WithMany("Reviews")
-                        .HasForeignKey("MovieID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

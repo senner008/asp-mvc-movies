@@ -1,8 +1,11 @@
 ## DEMO :
 - https://asp-mvc-movies.herokuapp.com/
 
-## appsettings.json
+## SETUP :
 
+appsettings.json
+
+```
 {
     "Logging": {
       "LogLevel": {
@@ -18,5 +21,16 @@
     },
     "Passwords" : {
       "adminpass" : "{{seeded-admin-user-pass}}"
+      "encryptionKey" : "{{key1}}",
+      "encryptionIV" : "{{key2}}"
     }
 }
+```
+
+## TODO :
+- add encryption DONE
+- db logging
+- add reviews to movies (one to many)
+- Implement repository pattern
+- Controller tests
+- Identity/Fake user tests
