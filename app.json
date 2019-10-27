@@ -19,6 +19,12 @@
     },
     "JAWSDB_URL" : {
       "required": true
+    },
+    "AES_KEY1" : {
+      "required": true
+    },
+    "AES_KEY2" : {
+      "required": true
     }
   },
   "formation": {
