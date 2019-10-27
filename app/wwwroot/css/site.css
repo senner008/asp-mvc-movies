@@ -69,3 +69,11 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+/*
+Custom table settings
+-------------------------------------------------- */
+
+main table td {
+  padding: 0.25rem !important;
+}
