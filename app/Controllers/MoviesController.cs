@@ -41,7 +41,6 @@ namespace asp_mvc.Controllers
                 Response.StatusCode = 404;
                 return View("Error", "Film med id findes ikke!");
             }
-
             return View(movie);
         }
 
