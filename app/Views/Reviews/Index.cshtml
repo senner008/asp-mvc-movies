@@ -16,6 +16,9 @@
                 @Html.DisplayNameFor(model => model.Movie)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.ReviewDate)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Article)
             </th>
             <th></th>
@@ -24,9 +27,13 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
+             <td>
                 @Html.DisplayFor(modelItem => item.Movie.Title)
             </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReviewDate)
+            </td>
+           
             <td>
                 @Html.DisplayFor(modelItem => item.Article)
             </td>

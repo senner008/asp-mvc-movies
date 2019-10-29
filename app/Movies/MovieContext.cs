@@ -90,7 +90,16 @@ namespace MvcMovie.Data
                     {
                         Id = 1,
                         MovieID = 1,
-                        Article = "Really Good Movie!"
+                        ReviewDate = DateTime.Parse("1989-2-13"),
+                        Article = "Really good movie!"
+                    },
+
+                      new Review
+                    {
+                        Id = 2,
+                        MovieID = 1,
+                        ReviewDate = DateTime.Parse("1989-2-14"),
+                        Article = "Really boring movie!"
                     }
                 };
 

@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MvcMovie.Data;
 
 namespace asp_mvc.Migrations
 {
     [DbContext(typeof(MvcMovieContext))]
-    partial class MvcMovieContextModelSnapshot : ModelSnapshot
+    [Migration("20191029172433_reviewdate")]
+    partial class reviewdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,16 +105,9 @@ namespace asp_mvc.Migrations
                         new
                         {
                             Id = 1,
-                            Article = "/pFoc0IJdqJ+5qNa1plKVBPopxwpyP3T7AGrYNdkKpw=",
+                            Article = "ZMhZSRV/DXqjBTa6ekvAAICpqePIZcD+JqpSuqCpVUI=",
                             MovieID = 1,
-                            ReviewDate = new DateTime(1989, 2, 13, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Article = "NQKO7CTPRboG+CceiapXoD38YHs9WOk2kKwMZG676Ns=",
-                            MovieID = 1,
-                            ReviewDate = new DateTime(1989, 2, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            ReviewDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
