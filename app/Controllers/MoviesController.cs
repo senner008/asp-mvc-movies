@@ -57,6 +57,7 @@ namespace asp_mvc.Controllers
         [ValidateAntiForgeryToken]
         [Authorize (Roles = "Admin")]
         public async Task<IActionResult> Create ([Bind ("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie) {
+
             if (ModelState.IsValid) {
                 _context.Add (movie);
                 await _context.SaveChangesAsync ();
@@ -68,12 +69,16 @@ namespace asp_mvc.Controllers
         // GET: Movies/Edit/5
         public async Task<IActionResult> Edit (int? id) {
             if (id == null) {
-                return NotFound ();
+                 Response.StatusCode = 404;
+                _logger.LogError($"Id not provided!");
+                return View("Error", "Intet id valgt!");
             }
 
             var movie = await _context.Movie.FindAsync (id);
             if (movie == null) {
-                return NotFound ();
+                 _logger.LogError ($"The movie does not exist!");
+                Response.StatusCode = 404;
+                return View ("Error", "Film med id findes ikke!");
             }
             return View (movie);
         }
@@ -84,10 +89,7 @@ namespace asp_mvc.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize (Roles = "Admin")]
-        public async Task<IActionResult> Edit (int id, [Bind ("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie) {
-            if (id != movie.Id) {
-                return NotFound ();
-            }
+        public async Task<IActionResult> Edit ([Bind ("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie) {
 
             if (ModelState.IsValid) {
                 try {
@@ -95,7 +97,9 @@ namespace asp_mvc.Controllers
                     await _context.SaveChangesAsync ();
                 } catch (DbUpdateConcurrencyException) {
                     if (!MovieExists (movie.Id)) {
-                        return NotFound ();
+                        _logger.LogError ($"The movie does not exist! Possibly deleted by another admin user");
+                        Response.StatusCode = 404;
+                        return View ("Error", "Film med id findes ikke! Muligvis slettet af anden admin bruger");
                     } else {
                         throw;
                     }
@@ -108,13 +112,16 @@ namespace asp_mvc.Controllers
         // GET: Movies/Delete/5
         public async Task<IActionResult> Delete (int? id) {
             if (id == null) {
-                return NotFound ();
+                Response.StatusCode = 404;
+                _logger.LogError($"Id not provided!");
+                return View("Error", "Intet id valgt!");
             }
-
             var movie = await _context.Movie
                 .FirstOrDefaultAsync (m => m.Id == id);
             if (movie == null) {
-                return NotFound ();
+                _logger.LogError ($"The movie does not exist!");
+                Response.StatusCode = 404;
+                return View ("Error", "Film med id findes ikke!");
             }
 
             return View (movie);
