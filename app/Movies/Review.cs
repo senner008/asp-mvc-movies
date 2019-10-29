@@ -12,7 +12,6 @@ namespace MvcMovie.Models {
         public Movie Movie { get; set; }
 
         [Encrypted]
-
         [Display (Name = "Review")]
         public string Article { get; set; }
     }
