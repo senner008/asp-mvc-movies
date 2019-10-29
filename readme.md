@@ -29,14 +29,14 @@ appsettings.json
 
 ## TODO :
 - add encryption DONE
+- protect master branch - DONE
+- add reviews to movies (one to many) - DONE
+- add date to Reviews
 - db logging
-- add reviews to movies (one to many)
 - Implement repository pattern
 - Controller tests
 - Identity/Fake user tests
 - SignalR - webapck -typscript (https://docs.microsoft.com/en-us/aspnet/core/tutorials/signalr-typescript-webpack?view=aspnetcore-3.0&tabs=visual-studio-code)
-- add clear field to input box
 - add remaining CRUD error handling
 - add JWT https://jasonwatmore.com/post/2019/10/11/aspnet-core-3-jwt-authentication-tutorial-with-example-api#tools-required
 - add roles managing page
-
