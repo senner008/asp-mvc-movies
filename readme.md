@@ -37,3 +37,5 @@ appsettings.json
 - SignalR - webapck -typscript (https://docs.microsoft.com/en-us/aspnet/core/tutorials/signalr-typescript-webpack?view=aspnetcore-3.0&tabs=visual-studio-code)
 - add clear field to input box
 - add remaining CRUD error handling
+- add JWT https://jasonwatmore.com/post/2019/10/11/aspnet-core-3-jwt-authentication-tutorial-with-example-api#tools-required
+- add roles managing page
