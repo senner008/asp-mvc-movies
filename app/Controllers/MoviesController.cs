@@ -22,13 +22,12 @@ namespace asp_mvc.Controllers
 
         public IActionResult Error(string msg = "Not found") {
             Response.StatusCode = 404;
-            return NotFound(msg);
+            return View("Error", msg);
         } 
 
         // GET: Movies
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Movie.ToListAsync());
+        public async Task<IActionResult> Index () {
+            return View (await _context.Movie.AsNoTracking ().ToListAsync ());
         }
 
         // GET: Movies/Details/5
@@ -36,16 +35,16 @@ namespace asp_mvc.Controllers
         {
             if (id == null)
             {
-                return Error();
+                return Error("Please provide id!");
             }
 
             var movie = await _context.Movie
-                .FirstOrDefaultAsync(m => m.Id == id);
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
-                return Error();
+                return Error("Movie could not be found");
             }
-
             return View(movie);
         }
 
@@ -77,13 +76,13 @@ namespace asp_mvc.Controllers
         {
             if (id == null)
             {
-                return Error();
+                return Error("Please provide id!");
             }
 
             var movie = await _context.Movie.FindAsync(id);
             if (movie == null)
             {
-                return Error();
+                return Error("Movie could not be found");
             }
             return View(movie);
         }
@@ -93,12 +92,12 @@ namespace asp_mvc.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-         [Authorize (Roles = "Admin")]
+        [Authorize (Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie)
         {
             if (id != movie.Id)
             {
-                return Error();
+                return Error("Please provide id!");
             }
 
             if (ModelState.IsValid)
@@ -112,7 +111,7 @@ namespace asp_mvc.Controllers
                 {
                     if (!MovieExists(movie.Id))
                     {
-                        return Error();
+                        return Error("Movie could not be found. Might have been deleted by another user");
                     }
                     else
                     {
@@ -129,14 +128,14 @@ namespace asp_mvc.Controllers
         {
             if (id == null)
             {
-                return Error();
+                return Error("Please provide id!");
             }
 
             var movie = await _context.Movie
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
-                return Error();
+                return Error("Movie could not be found");
             }
 
             return View(movie);
@@ -145,7 +144,7 @@ namespace asp_mvc.Controllers
         // POST: Movies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-         [Authorize (Roles = "Admin")]
+        [Authorize (Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
              var movie = await _context.Movie.FindAsync(id);
@@ -157,7 +156,7 @@ namespace asp_mvc.Controllers
             } catch (DbUpdateConcurrencyException) {
                  if (!MovieExists(movie.Id))
                     {
-                        return Error();
+                        return Error("Movie could not be found. Might have been deleted by another user");
                     }
                     else
                     {

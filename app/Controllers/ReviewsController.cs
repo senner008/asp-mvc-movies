@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MvcMovie.Data;
 using MvcMovie.Models;
 
@@ -22,7 +23,7 @@ namespace asp_mvc.Controllers
 
         public IActionResult Error(string msg = "Not found") {
             Response.StatusCode = 404;
-            return NotFound(msg);
+            return View("Error", msg);
         } 
 
         // GET: Reviews
@@ -37,7 +38,7 @@ namespace asp_mvc.Controllers
         {
             if (id == null)
             {
-                return Error();
+                return Error("Please provide id!");
             }
 
             var review = await _context.Reviews
@@ -45,7 +46,7 @@ namespace asp_mvc.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (review == null)
             {
-                return Error();
+                return Error("Review could not be found!");
             }
 
             return View(review);
@@ -81,13 +82,13 @@ namespace asp_mvc.Controllers
         {
             if (id == null)
             {
-                return Error();
+                return Error("Please provide id!");
             }
 
             var review = await _context.Reviews.FindAsync(id);
             if (review == null)
             {
-                return Error();
+                return Error("Review could not be found!");
             }
             ViewData["MovieID"] = new SelectList(_context.Movie, "Id", "Title");
             return View(review);
@@ -103,7 +104,7 @@ namespace asp_mvc.Controllers
         {
             if (id != review.Id)
             {
-                return Error();
+                return Error("Please provide id!");
             }
 
             if (ModelState.IsValid)
@@ -117,7 +118,7 @@ namespace asp_mvc.Controllers
                 {
                     if (!ReviewExists(review.Id))
                     {
-                        return Error();
+                        return Error("Review could not be found. Might have been deleted by another user");
                     }
                     else
                     {
@@ -135,7 +136,7 @@ namespace asp_mvc.Controllers
         {
             if (id == null)
             {
-                return Error();
+                return Error("Please provide id!");
             }
 
             var review = await _context.Reviews
@@ -143,7 +144,7 @@ namespace asp_mvc.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (review == null)
             {
-                return Error();
+                return Error("Review could not be found!");
             }
 
             return View(review);
@@ -164,7 +165,7 @@ namespace asp_mvc.Controllers
             } catch (DbUpdateConcurrencyException) {
                  if (!ReviewExists(review.Id))
                     {
-                        return Error();
+                        return Error("Review could not be found. Might have been deleted by another user");
                     }
                     else
                     {
