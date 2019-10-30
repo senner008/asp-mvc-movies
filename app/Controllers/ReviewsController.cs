@@ -21,7 +21,7 @@ namespace asp_mvc.Controllers
 
         public IActionResult Error(string msg = "Not found") {
             Response.StatusCode = 404;
-            return NotFound(msg);
+            return View("Error", msg);
         } 
 
         // GET: Reviews
