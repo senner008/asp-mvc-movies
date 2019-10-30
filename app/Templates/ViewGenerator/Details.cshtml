@@ -64,9 +64,26 @@
         <dt class = "col-sm-2">
             @@Html.DisplayNameFor(model => model.@GetValueExpression(navigation))
         </dt>
-        <dd class = "col-sm-10">
-            @@Html.DisplayFor(model => model.@GetValueExpression(navigation).@navigation.DisplayPropertyName)
-        </dd>
+                // fix duplication !
+                bool isSet = false;
+
+                var attributes = item.GetCustomAttributes(true);
+                foreach (dynamic attr in attributes)
+                {     
+                    if (attr.GetType().Name == "ScaffoldingOptions")
+                    {
+            <dd class = "col-sm-10">
+                @@Html.DisplayFor(model => model.@GetValueExpression(navigation).@attr.Prop)
+            </dd>
+                        isSet =  true;
+                    }
+                }
+                
+                if (!isSet) {
+            <dd class = "col-sm-10">
+                @@Html.DisplayFor(model => model.@GetValueExpression(navigation).@navigation.DisplayPropertyName)
+            </dd>
+                }   
         }
     }
 }    </dl>

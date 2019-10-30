@@ -51,12 +51,15 @@
             if (propertyLookup.TryGetValue(item.Name, out IPropertyMetadata property)
                 && property.Scaffold && !property.IsForeignKey && !property.IsPrimaryKey)
             {
+                Console.WriteLine(property);
             <th>
                 @@Html.DisplayNameFor(model => model.@GetValueExpression(property))
             </th>
             }
             else if (navigationLookup.TryGetValue(item.Name, out INavigationMetadata navigation))
             {
+
+                Console.WriteLine(navigation);
             <th>
                 @@Html.DisplayNameFor(model => model.@GetValueExpression(navigation))
             </th>
@@ -79,9 +82,26 @@
             }
             else if (navigationLookup.TryGetValue(item.Name, out INavigationMetadata navigation))
             {
+                // fix duplication
+                bool isSet = false;
+
+                var attributes = item.GetCustomAttributes(true);
+                foreach (dynamic attr in attributes)
+                {     
+                    if (attr.GetType().Name == "ScaffoldingOptions")
+                    {
             <td>
-                @@Html.DisplayFor(modelItem => item.@GetValueExpression(navigation).@navigation.DisplayPropertyName)
+                @@Html.DisplayFor(modelItem => item.@GetValueExpression(navigation).@attr.Prop)
             </td>
+                        isSet =  true;
+                    }
+                }
+                
+                if (!isSet) {
+                    <td>
+                        @@Html.DisplayFor(modelItem => item.@GetValueExpression(navigation).@navigation.DisplayPropertyName)
+                    </td>
+                }   
             }
         }
         string pkName = GetPrimaryKeyName();

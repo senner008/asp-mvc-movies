@@ -48,7 +48,7 @@ namespace asp_mvc.Controllers
         // GET: ReviewsAlt/Create
         public IActionResult Create()
         {
-                                          ViewData["MovieTitle"] = new SelectList(_context.Movie, "Id", "Title");
+                                        ViewData["MovieID"] = new SelectList(_context.Movie, "Id", "Title");
             return View();
         }
 
@@ -82,7 +82,7 @@ namespace asp_mvc.Controllers
             {
                 return NotFound();
             }
-            ViewData["MovieID"] = new SelectList(_context.Movie, "Id", "Id", review.MovieID);
+                            ViewData["MovieID"] = new SelectList(_context.Movie, "Id", "Title");
             return View(review);
         }
 

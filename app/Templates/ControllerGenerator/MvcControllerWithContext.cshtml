@@ -117,27 +117,28 @@ namespace @Model.ControllerNamespace
             @{
                 foreach (var property in relatedProperties.Values)
                 {
+                    bool isSet = false;
 
-
-                        foreach (var item in Model.ModelMetadata.ModelType.GetProperties())
-                        {
-                            var attributes = item.GetCustomAttributes(true);
-                            foreach (dynamic attr in attributes)
-                            {     
-                                    
-                                if (property.ForeignKeyPropertyNames[0] == item.Name)
+                    foreach (var item in Model.ModelMetadata.ModelType.GetProperties())
+                    {
+                        var attributes = item.GetCustomAttributes(true);
+                        foreach (dynamic attr in attributes)
+                        {     
+                                
+                            if (property.ForeignKeyPropertyNames[0] == item.Name)
+                            {
+                                if (attr.GetType().Name == "ScaffoldingOptions") 
                                 {
-                                    if (attr.GetType().Name == "ScaffoldingOptions") 
-                                    {
-                                          @:ViewData["@(attr.Name)"] = new SelectList(_context.@property.EntitySetName, "@property.PrimaryKeyNames[0]", "@attr.Prop");
-                                    }
-                                    else {
-                                          @:ViewData["@(property.ForeignKeyPropertyNames[0])"] = new SelectList(_context.@property.EntitySetName, "@property.PrimaryKeyNames[0]", "@property.DisplayPropertyName");
-                                    }
+                                        @:ViewData["@(property.ForeignKeyPropertyNames[0])"] = new SelectList(_context.@property.EntitySetName, "@property.PrimaryKeyNames[0]", "@attr.Prop");
+                                        isSet = true;
                                 }
                             }
                         }
+                    }
 
+                    if (!isSet) {
+                        @:ViewData["@(property.ForeignKeyPropertyNames[0])"] = new SelectList(_context.@property.EntitySetName, "@property.PrimaryKeyNames[0]", "@property.DisplayPropertyName");
+                    }
                       
                 }
             }            return View();
@@ -186,7 +187,30 @@ namespace @Model.ControllerNamespace
 @{
     foreach (var property in relatedProperties.Values)
     {
-            @:ViewData["@(property.ForeignKeyPropertyNames[0])"] = new SelectList(_context.@property.EntitySetName, "@property.PrimaryKeyNames[0]", "@property.DisplayPropertyName", @(Model.ModelVariable).@property.ForeignKeyPropertyNames[0]);
+
+        // clean up duplication!
+        bool isSet = false;
+
+        foreach (var item in Model.ModelMetadata.ModelType.GetProperties())
+        {
+            var attributes = item.GetCustomAttributes(true);
+            foreach (dynamic attr in attributes)
+            {     
+                    
+                if (property.ForeignKeyPropertyNames[0] == item.Name)
+                {
+                    if (attr.GetType().Name == "ScaffoldingOptions") 
+                    {
+                            @:ViewData["@(property.ForeignKeyPropertyNames[0])"] = new SelectList(_context.@property.EntitySetName, "@property.PrimaryKeyNames[0]", "@attr.Prop");
+                            isSet = true;
+                    }
+                }
+            }
+        }
+
+        if (!isSet) {
+            @:ViewData["@(property.ForeignKeyPropertyNames[0])"] = new SelectList(_context.@property.EntitySetName, "@property.PrimaryKeyNames[0]", "@property.DisplayPropertyName");
+        }
     }
 }
             return View(@Model.ModelVariable);
