@@ -249,9 +249,22 @@ namespace @Model.ControllerNamespace
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(@primaryKeyShortTypeName id)
         {
-            var @Model.ModelVariable = await _context.@(entitySetName).FindAsync(id);
-            _context.@(entitySetName).Remove(@Model.ModelVariable);
-            await _context.SaveChangesAsync();
+             var @Model.ModelVariable = await _context.@(entitySetName).FindAsync(id);
+
+            try {
+                _context.@(entitySetName).Remove(@Model.ModelVariable);
+                await _context.SaveChangesAsync();
+
+            } catch (DbUpdateConcurrencyException) {
+                 if (!@(Model.ModelTypeName)Exists(@Model.ModelVariable.@primaryKeyName))
+                    {
+                        return Error();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+            }
             return RedirectToAction(nameof(Index));
         }
 

@@ -21,7 +21,7 @@ namespace asp_mvc.Controllers
 
         public IActionResult Error(string msg = "Not found") {
             Response.StatusCode = 404;
-            return View("Error", msg);
+            return NotFound(msg);
         } 
 
         // GET: Movies
@@ -144,9 +144,22 @@ namespace asp_mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var movie = await _context.Movie.FindAsync(id);
-            _context.Movie.Remove(movie);
-            await _context.SaveChangesAsync();
+             var movie = await _context.Movie.FindAsync(id);
+
+            try {
+                _context.Movie.Remove(movie);
+                await _context.SaveChangesAsync();
+
+            } catch (DbUpdateConcurrencyException) {
+                 if (!MovieExists(movie.Id))
+                    {
+                        return Error();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+            }
             return RedirectToAction(nameof(Index));
         }
 

@@ -21,7 +21,7 @@ namespace asp_mvc.Controllers
 
         public IActionResult Error(string msg = "Not found") {
             Response.StatusCode = 404;
-            return View("Error", msg);
+            return NotFound(msg);
         } 
 
         // GET: Reviews
@@ -151,9 +151,22 @@ namespace asp_mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var review = await _context.Reviews.FindAsync(id);
-            _context.Reviews.Remove(review);
-            await _context.SaveChangesAsync();
+             var review = await _context.Reviews.FindAsync(id);
+
+            try {
+                _context.Reviews.Remove(review);
+                await _context.SaveChangesAsync();
+
+            } catch (DbUpdateConcurrencyException) {
+                 if (!ReviewExists(review.Id))
+                    {
+                        return Error();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+            }
             return RedirectToAction(nameof(Index));
         }
 
