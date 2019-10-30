@@ -35,7 +35,7 @@ namespace asp_mvc.Controllers
         {
             if (id == null)
             {
-                return Error();
+                return Error("Please provide id!");
             }
 
             var movie = await _context.Movie
@@ -43,7 +43,7 @@ namespace asp_mvc.Controllers
             .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
-                return Error();
+                return Error("Movie could not be found");
             }
             return View(movie);
         }
@@ -76,13 +76,13 @@ namespace asp_mvc.Controllers
         {
             if (id == null)
             {
-                return Error();
+                return Error("Please provide id!");
             }
 
             var movie = await _context.Movie.FindAsync(id);
             if (movie == null)
             {
-                return Error();
+                return Error("Movie could not be found");
             }
             return View(movie);
         }
@@ -97,7 +97,7 @@ namespace asp_mvc.Controllers
         {
             if (id != movie.Id)
             {
-                return Error();
+                return Error("Please provide id!");
             }
 
             if (ModelState.IsValid)
@@ -111,7 +111,7 @@ namespace asp_mvc.Controllers
                 {
                     if (!MovieExists(movie.Id))
                     {
-                        return Error();
+                        return Error("Movie could not be found. Might have been deleted by another user");
                     }
                     else
                     {
@@ -128,14 +128,14 @@ namespace asp_mvc.Controllers
         {
             if (id == null)
             {
-                return Error();
+                return Error("Please provide id!");
             }
 
             var movie = await _context.Movie
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
-                return Error();
+                return Error("Movie could not be found");
             }
 
             return View(movie);
@@ -156,7 +156,7 @@ namespace asp_mvc.Controllers
             } catch (DbUpdateConcurrencyException) {
                  if (!MovieExists(movie.Id))
                     {
-                        return Error();
+                        return Error("Movie could not be found. Might have been deleted by another user");
                     }
                     else
                     {
