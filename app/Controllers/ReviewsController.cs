@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MvcMovie.Data;
 using MvcMovie.Models;
 
@@ -13,22 +14,24 @@ namespace asp_mvc.Controllers {
     public class ReviewsController : Controller {
         private readonly MvcMovieContext _context;
 
-        public ReviewsController (MvcMovieContext context) {
+        public ILogger<ReviewsController> _logger { get; }
+
+        public ReviewsController (MvcMovieContext context, ILogger<ReviewsController> logger) {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Reviews
         public async Task<IActionResult> Index () {
-            var mvcMovieContext = _context.Reviews
-                .Include (r => r.Movie)
-                .AsNoTracking ();
-            return View (await mvcMovieContext.ToListAsync ());
+            return View (await _context.Reviews.Include(r => r.Movie).AsNoTracking().ToListAsync ());
         }
 
         // GET: Reviews/Details/5
         public async Task<IActionResult> Details (int? id) {
             if (id == null) {
-                return NotFound ();
+                Response.StatusCode = 404;
+                _logger.LogError($"Id not provided!");
+                return View("Error", "Intet id valgt!!");
             }
 
             var review = await _context.Reviews
@@ -36,7 +39,9 @@ namespace asp_mvc.Controllers {
                 .AsNoTracking ()
                 .FirstOrDefaultAsync (m => m.Id == id);
             if (review == null) {
-                return NotFound ();
+                _logger.LogError($"The review does not exist!");
+                Response.StatusCode = 404;
+                return View("Error", "Anmeldelse med id findes ikke!");
             }
 
             return View (review);

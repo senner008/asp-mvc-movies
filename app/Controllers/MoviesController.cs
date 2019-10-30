@@ -21,7 +21,7 @@ namespace asp_mvc.Controllers
 
         // GET: Movies
         public async Task<IActionResult> Index () {
-            return View (await _context.Movie.ToListAsync ());
+            return View (await _context.Movie.AsNoTracking ().ToListAsync ());
         }
 
         // GET: Movies/Details/5
@@ -34,7 +34,9 @@ namespace asp_mvc.Controllers
                 return View("Error", "Intet id valgt!!");
             }
 
-            var movie = await _context.Movie.FirstOrDefaultAsync(m => m.Id == id);
+            var movie = await _context.Movie
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
                 _logger.LogError($"The movie does not exist!");
