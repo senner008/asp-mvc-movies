@@ -19,6 +19,11 @@ namespace asp_mvc.Controllers
             _context = context;
         }
 
+        public IActionResult Error(string msg = "Not found") {
+            Response.StatusCode = 404;
+            return NotFound(msg);
+        } 
+
         // GET: ReviewsAlt
         public async Task<IActionResult> Index()
         {
@@ -31,7 +36,7 @@ namespace asp_mvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return Error();
             }
 
             var review = await _context.Reviews
@@ -39,7 +44,7 @@ namespace asp_mvc.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (review == null)
             {
-                return NotFound();
+                return Error();
             }
 
             return View(review);
@@ -48,7 +53,7 @@ namespace asp_mvc.Controllers
         // GET: ReviewsAlt/Create
         public IActionResult Create()
         {
-                                        ViewData["MovieID"] = new SelectList(_context.Movie, "Id", "Title");
+            ViewData["MovieID"] = new SelectList(_context.Movie, "Id", "Title");
             return View();
         }
 
@@ -74,15 +79,15 @@ namespace asp_mvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return Error();
             }
 
             var review = await _context.Reviews.FindAsync(id);
             if (review == null)
             {
-                return NotFound();
+                return Error();
             }
-                            ViewData["MovieID"] = new SelectList(_context.Movie, "Id", "Title");
+            ViewData["MovieID"] = new SelectList(_context.Movie, "Id", "Title");
             return View(review);
         }
 

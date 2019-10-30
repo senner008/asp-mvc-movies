@@ -74,6 +74,11 @@ namespace @Model.ControllerNamespace
             _context = context;
         }
 
+        public IActionResult Error(string msg = "Not found") {
+            Response.StatusCode = 404;
+            return NotFound(msg);
+        } 
+
         // GET: @routePrefix
 @{
         @:public async Task<IActionResult> Index()
@@ -98,14 +103,14 @@ namespace @Model.ControllerNamespace
         {
             if (id == null)
             {
-                return NotFound();
+                return Error();
             }
 
             var @Model.ModelVariable = await _context.@(entitySetName)@inlineIncludes
                 .FirstOrDefaultAsync(m => m.@primaryKeyName == id);
             if (@Model.ModelVariable == null)
             {
-                return NotFound();
+                return Error();
             }
 
             return View(@Model.ModelVariable);
@@ -117,31 +122,14 @@ namespace @Model.ControllerNamespace
             @{
                 foreach (var property in relatedProperties.Values)
                 {
-                    bool isSet = false;
+                    var scaffoldingoptionsname = GetScaffoldingOptionsName(property);
+                    var name = !String.IsNullOrEmpty(scaffoldingoptionsname) ? scaffoldingoptionsname : "@property.DisplayPropertyName";
+                    
+            @:ViewData["@(property.ForeignKeyPropertyNames[0])"] = new SelectList(_context.@property.EntitySetName, "@property.PrimaryKeyNames[0]", "@name");
 
-                    foreach (var item in Model.ModelMetadata.ModelType.GetProperties())
-                    {
-                        var attributes = item.GetCustomAttributes(true);
-                        foreach (dynamic attr in attributes)
-                        {     
-                                
-                            if (property.ForeignKeyPropertyNames[0] == item.Name)
-                            {
-                                if (attr.GetType().Name == "ScaffoldingOptions") 
-                                {
-                                        @:ViewData["@(property.ForeignKeyPropertyNames[0])"] = new SelectList(_context.@property.EntitySetName, "@property.PrimaryKeyNames[0]", "@attr.Prop");
-                                        isSet = true;
-                                }
-                            }
-                        }
-                    }
-
-                    if (!isSet) {
-                        @:ViewData["@(property.ForeignKeyPropertyNames[0])"] = new SelectList(_context.@property.EntitySetName, "@property.PrimaryKeyNames[0]", "@property.DisplayPropertyName");
-                    }
-                      
                 }
-            }            return View();
+            }    
+            return View();
         }
 
         // POST: @routePrefix/Create
@@ -176,41 +164,24 @@ namespace @Model.ControllerNamespace
         {
             if (id == null)
             {
-                return NotFound();
+                return Error();
             }
 
             var @Model.ModelVariable = await _context.@(entitySetName).FindAsync(id);
             if (@Model.ModelVariable == null)
             {
-                return NotFound();
+                return Error();
             }
 @{
     foreach (var property in relatedProperties.Values)
     {
 
-        // clean up duplication!
-        bool isSet = false;
+        var scaffoldingoptionsname = GetScaffoldingOptionsName(property);
+        var name = !String.IsNullOrEmpty(scaffoldingoptionsname) ? scaffoldingoptionsname : "@property.DisplayPropertyName";
 
-        foreach (var item in Model.ModelMetadata.ModelType.GetProperties())
-        {
-            var attributes = item.GetCustomAttributes(true);
-            foreach (dynamic attr in attributes)
-            {     
-                    
-                if (property.ForeignKeyPropertyNames[0] == item.Name)
-                {
-                    if (attr.GetType().Name == "ScaffoldingOptions") 
-                    {
-                            @:ViewData["@(property.ForeignKeyPropertyNames[0])"] = new SelectList(_context.@property.EntitySetName, "@property.PrimaryKeyNames[0]", "@attr.Prop");
-                            isSet = true;
-                    }
-                }
-            }
-        }
+            @:ViewData["@(property.ForeignKeyPropertyNames[0])"] = new SelectList(_context.@property.EntitySetName, "@property.PrimaryKeyNames[0]", "@name");
 
-        if (!isSet) {
-            @:ViewData["@(property.ForeignKeyPropertyNames[0])"] = new SelectList(_context.@property.EntitySetName, "@property.PrimaryKeyNames[0]", "@property.DisplayPropertyName");
-        }
+
     }
 }
             return View(@Model.ModelVariable);
@@ -318,4 +289,27 @@ namespace @Model.ControllerNamespace
     bool IsGuid(string typeName) {
         return String.Equals("System.Guid", typeName, StringComparison.OrdinalIgnoreCase);
     }
+
+
+     string GetScaffoldingOptionsName(dynamic property) {
+
+        string name = "";
+
+        foreach (var item in Model.ModelMetadata.ModelType.GetProperties())
+        {
+            var attributes = item.GetCustomAttributes(true);
+            foreach (dynamic attr in attributes)
+            {     
+                    
+                if (attr.GetType().Name == "ScaffoldingOptions" && property.ForeignKeyPropertyNames[0] == item.Name)
+                {
+                    name = attr.Prop;
+                }
+            }
+        }
+
+        return name;
+    }
+
+
 }
