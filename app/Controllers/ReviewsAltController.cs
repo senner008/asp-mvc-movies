@@ -100,7 +100,7 @@ namespace asp_mvc.Controllers
         {
             if (id != review.Id)
             {
-                return NotFound();
+                return Error();
             }
 
             if (ModelState.IsValid)
@@ -114,7 +114,7 @@ namespace asp_mvc.Controllers
                 {
                     if (!ReviewExists(review.Id))
                     {
-                        return NotFound();
+                        return Error();
                     }
                     else
                     {
@@ -132,7 +132,7 @@ namespace asp_mvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return Error();
             }
 
             var review = await _context.Reviews
@@ -140,7 +140,7 @@ namespace asp_mvc.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (review == null)
             {
-                return NotFound();
+                return Error();
             }
 
             return View(review);

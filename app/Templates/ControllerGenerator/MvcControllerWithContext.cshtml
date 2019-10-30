@@ -180,8 +180,6 @@ namespace @Model.ControllerNamespace
         var name = !String.IsNullOrEmpty(scaffoldingoptionsname) ? scaffoldingoptionsname : "@property.DisplayPropertyName";
 
             @:ViewData["@(property.ForeignKeyPropertyNames[0])"] = new SelectList(_context.@property.EntitySetName, "@property.PrimaryKeyNames[0]", "@name");
-
-
     }
 }
             return View(@Model.ModelVariable);
@@ -196,7 +194,7 @@ namespace @Model.ControllerNamespace
         {
             if (id != @Model.ModelVariable.@primaryKeyName)
             {
-                return NotFound();
+                return Error();
             }
 
             if (ModelState.IsValid)
@@ -210,7 +208,7 @@ namespace @Model.ControllerNamespace
                 {
                     if (!@(Model.ModelTypeName)Exists(@Model.ModelVariable.@primaryKeyName))
                     {
-                        return NotFound();
+                        return Error();
                     }
                     else
                     {
@@ -233,14 +231,14 @@ namespace @Model.ControllerNamespace
         {
             if (id == null)
             {
-                return NotFound();
+                return Error();
             }
 
             var @Model.ModelVariable = await _context.@(entitySetName)@inlineIncludes
                 .FirstOrDefaultAsync(m => m.@primaryKeyName == id);
             if (@Model.ModelVariable == null)
             {
-                return NotFound();
+                return Error();
             }
 
             return View(@Model.ModelVariable);
@@ -293,7 +291,7 @@ namespace @Model.ControllerNamespace
 
      string GetScaffoldingOptionsName(dynamic property) {
 
-        string name = "";
+        string name = null;
 
         foreach (var item in Model.ModelMetadata.ModelType.GetProperties())
         {
