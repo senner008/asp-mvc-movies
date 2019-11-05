@@ -18,75 +18,96 @@ using Microsoft.Extensions.Hosting;
 using MvcMovie.Data;
 using MvcMovie.Models;
 
-namespace asp_mvc {
+namespace asp_mvc
+{
 
-    public class Startup {
-        public Startup (IConfiguration configuration) {
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices (IServiceCollection services) {
-            Boolean isProduction = !String.IsNullOrEmpty (Environment.GetEnvironmentVariable ("DB"));
+        public void ConfigureServices(IServiceCollection services)
+        {
+            Boolean isProduction = !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("DB"));
 
-            services.AddDbContext<ApplicationDbContext> (options =>
-                options.UseMySql (isProduction ? Environment.GetEnvironmentVariable ("DB") : Configuration.GetConnectionString ("HerokuJawsDB")));
-            services.AddDefaultIdentity<IdentityUser> (options => {
-                    options.SignIn.RequireConfirmedAccount = true;
-                    options.User.RequireUniqueEmail = true;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequiredLength = 15;
-                })
-                .AddRoles<IdentityRole> ()
-                .AddEntityFrameworkStores<ApplicationDbContext> ();
+            services.AddDbContext<ApplicationDbContext>(options =>
+               options.UseMySql(isProduction ? Environment.GetEnvironmentVariable("DB") : Configuration.GetConnectionString("HerokuJawsDB")));
+            services.AddDefaultIdentity<IdentityUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 15;
+            })
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddDbContext<MvcMovieContext> (options =>
-                options.UseMySql (isProduction ? Environment.GetEnvironmentVariable ("UNOEURO_DB") : Configuration.GetConnectionString ("UnoEuroDb")));
+            services.AddDbContext<MvcMovieContext>(options =>
+               options.UseMySql(isProduction ? Environment.GetEnvironmentVariable("UNOEURO_DB") : Configuration.GetConnectionString("UnoEuroDb")));
 
-            services.AddControllersWithViews ();
-            services.AddRazorPages ();
+            services.AddControllersWithViews();
+            services.AddRazorPages();
 
             string key1;
             string key2;
 
-            if (isProduction) {
-                key1 = Environment.GetEnvironmentVariable ("AES_KEY1");
-                key2 = Environment.GetEnvironmentVariable ("AES_KEY2");
-            } else {
-                var keys = Configuration.GetSection ("Passwords");
-                key1 = keys.GetSection ("encryptionKey").Value;
-                key2 = keys.GetSection ("encryptionIV").Value;
+            if (isProduction)
+            {
+                key1 = Environment.GetEnvironmentVariable("AES_KEY1");
+                key2 = Environment.GetEnvironmentVariable("AES_KEY2");
             }
-            services.AddSingleton<IGetKeys> (opt => new GetKeys (Configuration, key1, key2));
-            services.AddSingleton<IKeys, Keys> ();
+            else
+            {
+                var keys = Configuration.GetSection("Passwords");
+                key1 = keys.GetSection("encryptionKey").Value;
+                key2 = keys.GetSection("encryptionIV").Value;
+            }
+            services.AddSingleton<IGetKeys>(opt => new GetKeys(Configuration, key1, key2));
+            services.AddSingleton<IKeys, Keys>();
+
+            //apply as attribute
+            services.AddScoped<ValidationFilterAttribute>();
+
+            //apply as global filter
+            // services.AddMvc(options =>
+            // {
+            //     options.Filters.Add(new ValidationFilterAttribute());      
+            // });
         }
-        
-        public void Configure (IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager) {
 
-            if (env.IsDevelopment ()) {
-                ApplicationDbInitializer.SeedUsers (userManager, Configuration.GetSection ("Passwords").GetSection ("adminpass").Value);
-                app.UseDeveloperExceptionPage ();
-                app.UseDatabaseErrorPage ();
-            } else {
-                app.UseExceptionHandler ("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts ();
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager)
+        {
+
+            if (env.IsDevelopment())
+            {
+                ApplicationDbInitializer.SeedUsers(userManager, Configuration.GetSection("Passwords").GetSection("adminpass").Value);
+                app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
-            app.UseHttpsRedirection ();
-            app.UseStaticFiles ();
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
-            app.UseRouting ();
+            app.UseRouting();
 
-            app.UseAuthentication ();
-            app.UseAuthorization ();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
-            app.UseEndpoints (endpoints => {
-                endpoints.MapControllerRoute (
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages ();
+                endpoints.MapRazorPages();
             });
         }
     }

@@ -9,8 +9,7 @@ using asp_mvc.Models;
 
 namespace asp_mvc.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
+     [Route("[controller]")]
     public class HelloWorldController : ControllerBase
     {
         private readonly ILogger<HelloWorldController> _logger;
@@ -25,5 +24,18 @@ namespace asp_mvc.Controllers
         {
             return Ok("Hello World");
         }
+
+        [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public IActionResult ActionMethod([FromBody] MyClass myclass)
+        {
+            System.Console.WriteLine("action method");
+            return Ok(myclass);
+        }
+    }
+
+    public class MyClass
+    {
+        public int Prop { get; set; }
     }
 }
