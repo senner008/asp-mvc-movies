@@ -11,6 +11,8 @@ using MvcMovie.Models;
 
 namespace asp_mvc.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class MoviesController : Controller
     {
         private readonly MvcMovieContext _context;
@@ -19,18 +21,23 @@ namespace asp_mvc.Controllers
         {
             _context = context;
         }
-
+        [HttpGet]
+        [Route("Error")]
         public IActionResult Error(string msg = "Not found") {
             Response.StatusCode = 404;
             return View("Error", msg);
         } 
 
         // GET: Movies
+        [HttpGet]
+        [Route("")]
         public async Task<IActionResult> Index () {
             return View (await _context.Movie.AsNoTracking ().ToListAsync ());
         }
-
+        
         // GET: Movies/Details/5
+        [HttpGet]
+        [Route("Details")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,8 +54,10 @@ namespace asp_mvc.Controllers
             }
             return View(movie);
         }
-
+        
         // GET: Movies/Create
+        [HttpGet]
+        [Route("Create")]
         public IActionResult Create()
         {
             return View();
@@ -58,9 +67,10 @@ namespace asp_mvc.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Create")]
         [ValidateAntiForgeryToken]
         [Authorize (Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie)
+        public async Task<IActionResult> Create([FromForm] Movie movie)
         {
             if (ModelState.IsValid)
             {
@@ -71,8 +81,11 @@ namespace asp_mvc.Controllers
             return View(movie);
         }
 
+         
         // GET: Movies/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        [HttpGet]
+        [Route("Edit/{id}")]
+        public async Task<IActionResult> Edit(int id)
         {
             if (id == null)
             {
@@ -91,9 +104,10 @@ namespace asp_mvc.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Edit/{id}")]
         [ValidateAntiForgeryToken]
         [Authorize (Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie)
+        public async Task<IActionResult> Edit([FromRoute] int id, [FromForm] Movie movie)
         {
             if (id != movie.Id)
             {
@@ -124,12 +138,10 @@ namespace asp_mvc.Controllers
         }
 
         // GET: Movies/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [HttpGet]
+        [Route("Delete/{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            if (id == null)
-            {
-                return Error("Please provide id!");
-            }
 
             var movie = await _context.Movie
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -142,10 +154,11 @@ namespace asp_mvc.Controllers
         }
 
         // POST: Movies/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [Route("Delete/{id}")]
         [ValidateAntiForgeryToken]
         [Authorize (Roles = "Admin")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed([FromRoute] int id)
         {
              var movie = await _context.Movie.FindAsync(id);
 
